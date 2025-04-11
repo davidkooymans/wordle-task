@@ -26,20 +26,28 @@ function Game() {
 
   const [guesses, setGuesses] = React.useState(buildGuesses())
   const [guessIndex, setGuessIndex] = React.useState(0)
+  // states can be playing/won/lost
+  const [gameState, setGameState] = React.useState('playing');
 
   function addGuess(guess) {
     if (guessIndex >= NUM_OF_GUESSES_ALLOWED) {
-      window.alert('You have reached 6 guesses')
+      window.alert('You have reached 6 guesses');
       return;
     }
     newGuesses = [...guesses]
     const evalGuess = checkGuess(guess, answer)
     newGuesses[guessIndex].letters.forEach((letter, index) => {
-      letter.char = evalGuess[index].letter
-      letter.status = evalGuess[index].status
+      letter.char = evalGuess[index].letter;
+      letter.status = evalGuess[index].status;
     })
     setGuesses(newGuesses)
     setGuessIndex(guessIndex + 1)
+    if (guess === answer) {
+      setGameState('won');
+    }
+    else if (guessIndex == 5) {
+      setGameState('lost');
+    }
   }
 
   return <>
@@ -54,8 +62,23 @@ function Game() {
         </p>
       })}
     </div>
-    <GuessInput addGuess={addGuess} />
-  </>;
+    <GuessInput addGuess={addGuess} gameState={gameState}/>
+    {gameState === 'won' && (<div class="happy banner">
+      <p>
+        <strong>Congratulations!</strong> Got it in{' '}
+        <strong>{guessIndex} guess{guessIndex > 1?'es':''}</strong>.
+      </p>
+    </div>
+    )}
+
+    {gameState === 'lost' && (
+      <div class="sad banner">
+        <p>Sorry, the correct answer is <strong>{answer}</strong>.</p>
+      </div>
+    )}
+
+
+    </>
 }
 
-export default Game;
+    export default Game;
