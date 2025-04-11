@@ -6,11 +6,6 @@ import { checkGuess } from '../../game-helpers'
 import { NUM_OF_GUESSES_ALLOWED } from '../../constants'
 import GuessInput from '../GuessInput'
 
-// Pick a random word on every pageload.
-const answer = sample(WORDS);
-// To make debugging easier, we'll log the solution in the console.
-console.info({ answer });
-
 function Game() {
   function buildGuesses() {
     let guesses = [];
@@ -24,17 +19,26 @@ function Game() {
     return guesses;
   }
 
+
+  const [answer, setAnswer] = React.useState(sample(WORDS))
   const [guesses, setGuesses] = React.useState(buildGuesses())
   const [guessIndex, setGuessIndex] = React.useState(0)
   // states can be playing/won/lost
   const [gameState, setGameState] = React.useState('playing');
+
+  function reset() {
+    setAnswer(sample(WORDS));
+    setGuessIndex(0);
+    setGuesses(buildGuesses());
+    setGameState('playing');
+  }
 
   function addGuess(guess) {
     if (guessIndex >= NUM_OF_GUESSES_ALLOWED) {
       window.alert('You have reached 6 guesses');
       return;
     }
-    newGuesses = [...guesses]
+    let newGuesses = [...guesses]
     const evalGuess = checkGuess(guess, answer)
     newGuesses[guessIndex].letters.forEach((letter, index) => {
       letter.char = evalGuess[index].letter;
@@ -63,17 +67,19 @@ function Game() {
       })}
     </div>
     <GuessInput addGuess={addGuess} gameState={gameState}/>
-    {gameState === 'won' && (<div class="happy banner">
+    {gameState === 'won' && (<div className="happy banner">
       <p>
         <strong>Congratulations!</strong> Got it in{' '}
         <strong>{guessIndex} guess{guessIndex > 1?'es':''}</strong>.
       </p>
+      <button onClick={()=>reset()} className='reset-button'>RESET</button>
     </div>
     )}
 
     {gameState === 'lost' && (
-      <div class="sad banner">
+      <div className="sad banner">
         <p>Sorry, the correct answer is <strong>{answer}</strong>.</p>
+        <button onClick={()=>reset()} className='reset-button'>RESET</button>
       </div>
     )}
 
