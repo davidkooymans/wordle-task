@@ -240,10 +240,35 @@ h1 {
   }
 }
 
-.reset-button {
-  background-color: blue;
-  padding: 2px 8px;
+.button {
+  padding: 2px 4px;
+  margin: 2px;
   border-style: solid;
-  border-color: blue;
   border-radius: 5px;
+  background: var(--color-gray-700);
+  border-color: var(--color-gray-700);
+  color: var(--color-gray-300);
+}
+
+.button.correct {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: white;
+}
+
+.button.incorrect {
+  background: var(--color-gray-300);
+  border-color: var(--color-gray-300);
+  color: white;
+}
+
+.button.misplaced {
+  background: var(--color-warning);
+  border-color: var(--color-warning);
+  color: white;
+}
+
+.reset {
+  background-color: blue;
+  border-color: blue;
 }
